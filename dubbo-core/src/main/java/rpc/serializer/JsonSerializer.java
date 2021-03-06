@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import entity.RpcRequest;
 import enumeration.SerializerCode;
+import exception.SerializeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,9 +21,8 @@ public class JsonSerializer implements CommonSerializer{
         try {
             return objectMapper.writeValueAsBytes(obj);
         } catch (JsonProcessingException e) {
-            logger.error("序列化时有错误发生: {}", e.getMessage());
-            e.printStackTrace();
-            return null;
+            logger.error("序列化时有错误发生:", e);
+            throw new SerializeException("序列化时有错误发生");
         }
     }
 
@@ -30,14 +30,13 @@ public class JsonSerializer implements CommonSerializer{
     public Object deserialize(byte[] bytes, Class<?> clazz) {
         try {
             Object obj = objectMapper.readValue(bytes, clazz);
-            if(obj instanceof RpcRequest) {
+            if (obj instanceof RpcRequest) {
                 obj = handleRequest(obj);
             }
             return obj;
         } catch (IOException e) {
-            logger.error("反序列化时有错误发生: {}", e.getMessage());
-            e.printStackTrace();
-            return null;
+            logger.error("序列化时有错误发生:", e);
+            throw new SerializeException("序列化时有错误发生");
         }
     }
 
@@ -47,9 +46,9 @@ public class JsonSerializer implements CommonSerializer{
      */
     private Object handleRequest(Object obj) throws IOException {
         RpcRequest rpcRequest = (RpcRequest) obj;
-        for(int i = 0; i < rpcRequest.getParamTypes().length; i ++) {
+        for (int i = 0; i < rpcRequest.getParamTypes().length; i++) {
             Class<?> clazz = rpcRequest.getParamTypes()[i];
-            if(!clazz.isAssignableFrom(rpcRequest.getParameters()[i].getClass())) {
+            if (!clazz.isAssignableFrom(rpcRequest.getParameters()[i].getClass())) {
                 byte[] bytes = objectMapper.writeValueAsBytes(rpcRequest.getParameters()[i]);
                 rpcRequest.getParameters()[i] = objectMapper.readValue(bytes, clazz);
             }
@@ -61,5 +60,4 @@ public class JsonSerializer implements CommonSerializer{
     public int getCode() {
         return SerializerCode.valueOf("JSON").getCode();
     }
-
 }
