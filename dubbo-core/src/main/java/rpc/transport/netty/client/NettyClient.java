@@ -17,6 +17,7 @@ import rpc.loadBalancer.LoadBalancer;
 import rpc.loadBalancer.RandomLoadBalancer;
 import rpc.register.NacosServiceDiscovery;
 import rpc.register.ServiceDiscovery;
+import rpc.register.ZkServiceDiscovery;
 import rpc.serializer.CommonSerializer;
 import rpc.transport.RpcClient;
 
@@ -57,6 +58,11 @@ public class NettyClient implements RpcClient {
     }
     public NettyClient(Integer serializer, LoadBalancer loadBalancer) {
         this.serviceDiscovery = new NacosServiceDiscovery(loadBalancer);
+        this.serializer = CommonSerializer.getByCode(serializer);
+        this.unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
+    }
+    public NettyClient(Integer serializer, LoadBalancer loadBalancer,String z) {
+        this.serviceDiscovery = new ZkServiceDiscovery(loadBalancer);
         this.serializer = CommonSerializer.getByCode(serializer);
         this.unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
     }

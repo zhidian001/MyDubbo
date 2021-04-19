@@ -17,7 +17,7 @@ import java.net.Socket;
 /**
  * 处理RpcRequest的工作线程
  *
- * @author ziyang
+ * @author zhidian
  */
 public class SocketRequestHandlerThread implements Runnable {
 

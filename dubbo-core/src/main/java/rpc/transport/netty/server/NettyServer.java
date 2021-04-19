@@ -19,6 +19,7 @@ import rpc.provider.ServiceProvider;
 import rpc.provider.ServiceProviderImpl;
 import rpc.register.NacosServiceRegistry;
 import rpc.register.ServiceRegistry;
+import rpc.register.ZkServiceRegistry;
 import rpc.serializer.CommonSerializer;
 import rpc.transport.RpcServer;
 
@@ -49,7 +50,13 @@ public class NettyServer implements RpcServer {
         serviceProvider = new ServiceProviderImpl();
         this.serializer = CommonSerializer.getByCode(serializer);
     }
-
+    public NettyServer(String host, int port, Integer serializer,String z) {
+        this.host = host;
+        this.port = port;
+        serviceRegistry = new ZkServiceRegistry();
+        serviceProvider = new ServiceProviderImpl();
+        this.serializer = CommonSerializer.getByCode(serializer);
+    }
     @Override
     public <T> void publishService(T service, Class<T> serviceClass) {
         if(serializer == null) {

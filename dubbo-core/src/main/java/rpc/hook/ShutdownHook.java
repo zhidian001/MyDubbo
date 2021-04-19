@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import util.NacosUtil;
 
 /**
- * @author ziyang
+ * @author zhidian
  */
 public class ShutdownHook {
 

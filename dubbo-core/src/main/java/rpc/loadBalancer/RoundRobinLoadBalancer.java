@@ -14,4 +14,12 @@ public class RoundRobinLoadBalancer implements LoadBalancer{
             }
             return instances.get(index++);
         }
+
+    @Override
+    public String selectServiceAddress(List<String> instances, String serviceName) {
+        if(index >= instances.size()) {
+            index %= instances.size();
+        }
+        return instances.get(index++);
     }
+}

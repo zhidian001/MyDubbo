@@ -11,7 +11,8 @@ public class NettyTestServer {
 
     public static void main(String[] args) {
         HelloService helloService = new HelloServiceImpl();
-        NettyServer server = new NettyServer("127.0.0.1", 9999, CommonSerializer.PROTOBUF_SERIALIZER);
+        //NettyServer server = new NettyServer("127.0.0.1", 8999, CommonSerializer.PROTOBUF_SERIALIZER);
+        NettyServer server = new NettyServer("127.0.0.1", 8999, CommonSerializer.PROTOBUF_SERIALIZER,"e");
         server.publishService(helloService, HelloService.class);
     }
 
